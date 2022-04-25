@@ -1,71 +1,34 @@
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
-const { mapDBToModel } = require('../../utils');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
-class PlaylistsongsService {
+class PlaylistSongsService {
   constructor() {
     this._pool = new Pool();
   }
 
-  async addPlaylistsong(songId, playlistId) {
-    const id = `playlistsong-${nanoid(16)}`;
-
-    const query = {
-      text: 'INSERT INTO playlistsongs VALUES($1, $2, $3) RETURNING id',
+  async addSongsToPlaylist(playlistId, songId) {
+    const id = `playlistsongs-${nanoid(16)}`;
+    const result = await this._pool.query({
+      text: 'INSERT INTO playlistsongs VALUES ($1, $2, $3) RETURNING id',
       values: [id, playlistId, songId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new InvariantError('Lagu gagal ditambahkan');
+    });
+    if (!result.rows[0].id) {
+      throw new InvariantError('Song dalam playlist gagal ditambahkan');
     }
-
     return result.rows[0].id;
   }
 
-  async getPlaylistsongById(id) {
-    const query = {
-      text: `SELECT playlistsongs.*, songs.title, songs.performer FROM playlistsongs LEFT JOIN songs ON songs.id = playlistsongs.song_id 
-      WHERE playlistsongs.playlist_id = $1`,
-      values: [id],
-    };
-    const result = await this._pool.query(query);
-
+  async deleteSongsFromPlaylist(playlistId, songId) {
+    const result = await this._pool.query({
+      text: 'DELETE FROM playlistsongs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
+      values: [playlistId, songId],
+    });
     if (!result.rows.length) {
-      throw new NotFoundError("Playlist tidak ditemukan");
-    }
-
-    return result.rows.map(mapDBToModel);
-  }
-
-  async deletePlaylistsong(songId, playlistId) {
-    const query = {
-      text: 'DELETE FROM playlistsongs WHERE song_id = $1 AND playlist_id = $2 RETURNING id',
-      values: [songId, playlistId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new InvariantError('Lagu gagal dihapus');
-    }
-  }
-
-  async verifyCollaborator(songId, playlistId) {
-    const query = {
-      text: 'SELECT * FROM playlistsongs WHERE song_id = $1 AND playlist_id = $2',
-      values: [songId, playlistId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new InvariantError('Lagu gagal diverifikasi');
+      throw new NotFoundError('Song dalam Playlist gagal dihapus. Id tidak ditemukan');
     }
   }
 }
 
-module.exports = PlaylistsongsService;
+module.exports = PlaylistSongsService;

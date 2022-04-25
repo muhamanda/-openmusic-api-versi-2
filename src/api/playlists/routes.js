@@ -4,7 +4,7 @@ const routes = (handler) => [
     path: '/playlists',
     handler: handler.postPlaylistHandler,
     options: {
-      auth: 'playlistsapp_jwt',
+      auth: 'openmusicsapp_jwt',
     },
   },
   {
@@ -12,23 +12,7 @@ const routes = (handler) => [
     path: '/playlists',
     handler: handler.getPlaylistsHandler,
     options: {
-      auth: 'playlistsapp_jwt',
-    },
-  },
-  {
-    method: 'GET',
-    path: '/playlists/{id}',
-    handler: handler.getPlaylistByIdHandler,
-    options: {
-      auth: 'playlistsapp_jwt',
-    },
-  },
-  {
-    method: 'PUT',
-    path: '/playlists/{id}',
-    handler: handler.putPlaylistByIdHandler,
-    options: {
-      auth: 'playlistsapp_jwt',
+      auth: 'openmusicsapp_jwt',
     },
   },
   {
@@ -36,9 +20,10 @@ const routes = (handler) => [
     path: '/playlists/{id}',
     handler: handler.deletePlaylistByIdHandler,
     options: {
-      auth: 'playlistsapp_jwt',
+      auth: 'openmusicsapp_jwt',
     },
   },
+
 ];
 
 module.exports = routes;

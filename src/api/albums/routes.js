@@ -1,23 +1,18 @@
 const routes = (handler) => [
   {
     method: 'POST',
-    path: '/albums',
-    handler: handler.postAlbumHandler,
-  },
-  {
-    method: 'GET',
-    path: '/albums/{id}',
-    handler: handler.getAlbumByIdHandler,
+    path: '/authentications',
+    handler: handler.postAuthenticationHandler,
   },
   {
     method: 'PUT',
-    path: '/albums/{id}',
-    handler: handler.putAlbumByIdHandler,
+    path: '/authentications',
+    handler: handler.putAuthenticationHandler,
   },
   {
     method: 'DELETE',
-    path: '/albums/{id}',
-    handler: handler.deleteAlbumByIdHandler,
+    path: '/authentications',
+    handler: handler.deleteAuthenticationHandler,
   },
 ];
 

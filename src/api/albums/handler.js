@@ -5,7 +5,6 @@ class AlbumsHandler {
     this._service = service;
     this._validator = validator;
 
-    // Agar this nya merujuk pada instance dari AlbumsService bukan object route
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
     this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
@@ -15,13 +14,9 @@ class AlbumsHandler {
   async postAlbumHandler(request, h) {
     try {
       this._validator.validateAlbumPayload(request.payload);
-      const {
-        name, year,
-      } = request.payload;
+      const { name = 'untitled', year } = request.payload;
 
-      const albumId = await this._service.addAlbum({
-        name, year,
-      });
+      const albumId = await this._service.addAlbum({ name, year });
 
       const response = h.response({
         status: 'success',

@@ -28,11 +28,13 @@ npm run migrate create "create table songs"
 npm run migrate create "create table users"
 npm run migrate create "create table authentications"
 npm run migrate create "create table playlists"
+npm run migrate create "create table albums"
 CREATE TABLE di Folder Migrate: npm run migrate up
 npm run migrate create "add column owner to table playlists"
 npm run migrate create "add foreign key to owner column"
 npm run migrate create "create collaborations table"
 npm run migrate create "create playlistssongs table"
+npm run migrate create "create table playlist_activities"
 
 migrations: masing2 tabel
 exceptions: client,invariant,
@@ -40,8 +42,10 @@ utils: index (insert/update) #skipalbum
 services/postgres:  (insert/update)  #cek
 validator: schema, index  #cek
 api: routes,handler,index #cek
-server.js
 tokenize: TokenManager.js
+server.js
+
+
 
 // https://github.com/muhamanda/openmusic-api-versi-1.git
 

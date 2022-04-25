@@ -1,18 +1,17 @@
-// mengimpor dotenv dan menjalankan konfigurasinya
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 
-// songs
-const songs = require('./api/songs');
-const SongsService = require('./services/postgres/SongsService');
-const SongsValidator = require('./validator/songs');
-
 // albums
 const albums = require('./api/albums');
 const AlbumsService = require('./services/postgres/AlbumsService');
 const AlbumsValidator = require('./validator/albums');
+
+// songs
+const songs = require('./api/songs');
+const SongsService = require('./services/postgres/SongsService');
+const SongsValidator = require('./validator/songs');
 
 // users
 const users = require('./api/users');
@@ -36,18 +35,23 @@ const PlaylistsService = require('./services/postgres/PlaylistsService');
 const PlaylistsValidator = require('./validator/playlists');
 
 // playlistsongs
-const playlistsongs = require('./api/playlistsongs');
-const PlaylistsongsService = require('./services/postgres/PlaylistsongsService');
-const PlaylistsongsValidator = require('./validator/playlistsongs');
+const playlistSongs = require('./api/playlistsongs');
+const PlaylistSongsService = require('./services/postgres/PlaylistSongsService');
+const PlaylistSongsValidator = require('./validator/playlistsongs');
+
+// playlist-activities
+const playlistActivities = require('./api/playlist-activities');
+const PlaylistActivitiesService = require('./services/postgres/PlaylistActivitiesService');
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
-  const songsService = new SongsService();
   const albumsService = new AlbumsService();
+  const songsService = new SongsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const playlistsService = new PlaylistsService(collaborationsService);
-  const playlistsongsService = new PlaylistsongsService();
+  const playlistSongsService = new PlaylistSongsService();
+  const playlistActivitiesService = new PlaylistActivitiesService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -66,8 +70,8 @@ const init = async () => {
     },
   ]);
 
-  // mendefinisikan strategy otentikasi jwt
-  server.auth.strategy('playlistsapp_jwt', 'jwt', {
+  // mendefinisikan strategy autentikasi jwt
+  server.auth.strategy('openmusicsapp_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,
@@ -85,17 +89,17 @@ const init = async () => {
 
   await server.register([
     {
-      plugin: songs,
-      options: {
-        service: songsService,
-        validator: SongsValidator,
-      },
-    },
-    {
       plugin: albums,
       options: {
         service: albumsService,
         validator: AlbumsValidator,
+      },
+    },
+    {
+      plugin: songs,
+      options: {
+        service: songsService,
+        validator: SongsValidator,
       },
     },
     {
@@ -117,25 +121,40 @@ const init = async () => {
     {
       plugin: collaborations,
       options: {
-        collaborationsService,
-        playlistsService,
+        service: {
+          collaborationsService,
+          playlistsService,
+          usersService,
+        },
         validator: CollaborationsValidator,
       },
     },
     {
       plugin: playlists,
       options: {
-        playlistsService,
-        usersService,
+        service: playlistsService,
         validator: PlaylistsValidator,
       },
     },
     {
-      plugin: playlistsongs,
+      plugin: playlistSongs,
       options: {
-        playlistsongsService,
-        playlistsService,
-        validator: PlaylistsongsValidator,
+        service: {
+          playlistSongsService,
+          songsService,
+          playlistsService,
+          playlistActivitiesService,
+        },
+        validator: PlaylistSongsValidator,
+      },
+    },
+    {
+      plugin: playlistActivities,
+      options: {
+        service: {
+          playlistActivitiesService,
+          playlistsService,
+        },
       },
     },
   ]);
