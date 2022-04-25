@@ -28,13 +28,9 @@ exports.up = (pgm) => {
       type: 'INTEGER',
       notNull: false,
     },
-    inserted_at: {
+    album_id: {
       type: 'TEXT',
-      notNull: true,
-    },
-    updated_at: {
-      type: 'TEXT',
-      notNull: true,
+      notNull: false,
     },
   });
 };
@@ -42,3 +38,4 @@ exports.up = (pgm) => {
 exports.down = (pgm) => {
   pgm.dropTable('songs');
 };
+
