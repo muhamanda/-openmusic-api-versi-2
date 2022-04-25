@@ -1,0 +1,52 @@
+npm init --y
+
+npm install @hapi/hapi
+npm install nanoid
+npm install joi
+npm install pg
+npm install dotenv
+npm install node-pg-migrate
+npm install bcrypt
+npm install @hapi/jwt
+
+
+npm install nodemon -D
+npm install eslint -D
+npx eslint --init
+
+
+psql --username postgres
+CREATE USER developer WITH ENCRYPTED PASSWORD 'supersecretpassword';
+CREATE DATABASE openmusic2; #openmusic/notesapp/companydb;
+GRANT ALL PRIVILEGES ON DATABASE openmusic2 TO developer;
+\q
+
+.env
+
+psql --username developer --dbname openmusic2
+npm run migrate create "create table songs"
+npm run migrate create "create table users"
+npm run migrate create "create table authentications"
+npm run migrate create "create table playlists"
+CREATE TABLE di Folder Migrate: npm run migrate up
+npm run migrate create "add column owner to table playlists"
+npm run migrate create "add foreign key to owner column"
+npm run migrate create "create collaborations table"
+npm run migrate create "create playlistssongs table"
+
+migrations: masing2 tabel
+exceptions: client,invariant,
+utils: index (insert/update) #skipalbum
+services/postgres:  (insert/update)  #cek
+validator: schema, index  #cek
+api: routes,handler,index #cek
+server.js
+tokenize: TokenManager.js
+
+// https://github.com/muhamanda/openmusic-api-versi-1.git
+
+node
+require('crypto').randomBytes(64).toString('hex');
+
+Pengujian akan optimal bila Anda menghapus dulu data yang ada pada database lokal. Caranya, masuk ke psql cli dan hapus data dengan perintah:
+truncate notes, users, authentications;
