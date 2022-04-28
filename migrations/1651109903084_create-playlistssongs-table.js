@@ -20,9 +20,9 @@ exports.up = (pgm) => {
   });
 
   /*
-          Menambahkan constraint UNIQUE, kombinasi dari kolom playlist_id dan song_id.
-          Guna menghindari duplikasi data antara nilai keduanya.
-        */
+            Menambahkan constraint UNIQUE, kombinasi dari kolom playlist_id dan song_id.
+            Guna menghindari duplikasi data antara nilai keduanya.
+          */
   pgm.addConstraint('playlistsongs', 'unique_playlist_id_and_song_id', 'UNIQUE(playlist_id, song_id)');
 
   // memberikan constraint foreign key pada kolom playlist_id
@@ -34,4 +34,7 @@ exports.up = (pgm) => {
 exports.down = (pgm) => {
   // menghapus tabel playlistsongs
   pgm.dropTable('playlistsongs');
+  pgm.dropConstraint('playlistsongs', 'unique_playlist_id_and_song_id');
+  pgm.dropConstraint('playlistsongs', 'fk_playlistsongs.playlist_id_playlists.id');
+  pgm.dropConstraint('playlistsongs', 'fk_playlistsongs.song_id_songs.id');
 };
